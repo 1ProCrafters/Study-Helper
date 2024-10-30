@@ -22,7 +22,7 @@ st.title("AI-Powered Study Assistant")
 st.sidebar.header("Choose Your Study Tool")
 tool = st.sidebar.selectbox(
     "Select a tool", 
-    ["Summarize Text"]
+    ["Summarize Text", "Generate Practice Questions"]
 )
 
 # Summarize Text
@@ -32,3 +32,13 @@ if tool == "Summarize Text":
     if st.button("Summarize"):
         summary = summarizer(text_input, max_length=100, min_length=25, do_sample=False)[0]["summary_text"]
         st.write("**Summary:**", summary)
+
+# Generate Practice Questions
+elif tool == "Generate Practice Questions":
+    st.header("Generate Practice Questions from Text")
+    text_input = st.text_area("Enter text to generate questions from:")
+    if st.button("Generate Questions"):
+        questions = question_generator("generate question: " + text_input)
+        for i, q in enumerate(questions):
+            st.write(f"**Question {i + 1}:** {q['generated_text']}")
+
