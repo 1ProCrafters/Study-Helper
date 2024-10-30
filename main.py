@@ -22,7 +22,7 @@ st.title("AI-Powered Study Assistant")
 st.sidebar.header("Choose Your Study Tool")
 tool = st.sidebar.selectbox(
     "Select a tool", 
-    ["Summarize Text", "Generate Practice Questions"]
+    ["Summarize Text", "Generate Practice Questions", "Create Flashcards"]
 )
 
 # Summarize Text
@@ -41,4 +41,24 @@ elif tool == "Generate Practice Questions":
         questions = question_generator("generate question: " + text_input)
         for i, q in enumerate(questions):
             st.write(f"**Question {i + 1}:** {q['generated_text']}")
+
+# Create Flashcards and Review with Spaced Repetition
+elif tool == "Create Flashcards":
+    st.header("Create Flashcards for Active Recall")
+    st.write("Enter each flashcard in the format: `Front:Back`")
+    flashcard_input = st.text_area("Add your flashcards here:")
+    if st.button("Save Flashcards"):
+        new_flashcards = [line.split(":") for line in flashcard_input.split("\n") if ":" in line]
+        st.session_state.flashcards.extend(new_flashcards)
+        st.write("Flashcards saved!")
+
+    # Review flashcards
+    st.subheader("Flashcard Review Session")
+    if st.session_state.flashcards:
+        for idx, (front, back) in enumerate(st.session_state.flashcards):
+            with st.expander(f"Flashcard {idx + 1}"):
+                st.write(f"**Front:** {front}")
+                if st.button(f"Show Answer {idx}", key=f"show_{idx}"):
+                    st.write(f"**Back:** {back}")
+
 
